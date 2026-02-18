@@ -1,6 +1,8 @@
 import binascii
 import re
 
+#TEST
+
 with open("WorldData.sav", 'r+b') as f:
     hex_data = f.read()
     pattern = re.compile(b'TotalPlaytime\x00\x0e\x00\x00\x00FloatProperty')
