@@ -1,16 +1,20 @@
 import binascii
 import re
 
-#TEST
+with open("WorldData.sav", 'rb') as f:
+    hex_data = bytearray(f.read())
 
-with open("WorldData.sav", 'r+b') as f:
-    hex_data = f.read()
-    pattern = re.compile(b'TotalPlaytime\x00\x0e\x00\x00\x00FloatProperty')
-    for match in pattern.finditer(hex_data):
-        print(f"Match: {match.end()+11} (0x{match.end()+11:X})")
-        print(binascii.hexlify(hex_data[match.end()+11:]).decode('utf-8'))
-        #f.seek(match.end()+11)
-        #f.write(b'\x00\x00')
+pattern = re.compile(b'TotalPlaytime\x00\x0e\x00\x00\x00FloatProperty')
+for match in pattern.finditer(hex_data):
+    offset = match.end() + 11
+    print(f"Offset found at: {offset} (0x{offset:X})")
+    print(binascii.hexlify(hex_data[offset:offset+16]).decode('utf-8'))
+    hex_data[offset:offset+2] = b'\xFA\xFA'
+
+with open("WorldData_modified.sav", 'wb') as f_out:
+    f_out.write(hex_data)
+
+
 
         #print(binascii.hexlify(hex_data[match.end()+11:]).decode('utf-8'))
 #print(hex_data)
